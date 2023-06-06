@@ -1,24 +1,9 @@
-# README
+# Google Authorization
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Drive auth = API key
+Sheets auth = Service account
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Service account
+1. Create service account
+2. Generate and download key to `./auth.json`
+3. Set `GOOGLE_APPLICATION_CREDENTIALS`="./auth.json"

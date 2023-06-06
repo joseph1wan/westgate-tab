@@ -41,16 +41,33 @@ module SheetsDatabase
     end
 
     # Find record by ID (id + 1 to account for first row being columns row)
-    def find_by_id(id)
-      rows[id + 1]
+    def row(id)
+      raise Exceptions::InvalidRowError, "Row must be a positive integer" unless id.positive?
+
+      rows[id - 1]
     end
 
+    # Find first row matching term in given golumn
     def find(column_name, term)
       column_index = columns[column_name]
       raise Exceptions::InvalidColumnNameError if column_index.nil?
 
       index = rows.map { |row| row[column_index] }.index(term)
-      rows[index]
+      rows[index] if index
+    end
+
+    # First pass at implementing where. Returns all matching column
+    # For now, nil = ""
+    def where(column_name, term)
+      column_index = columns[column_name]
+      raise Exceptions::InvalidColumnNameError if column_index.nil?
+
+      term = "" if term.nil?
+
+      rows.select do |row|
+        value = row[column_index] || ""
+        value == term
+      end
     end
   end
 end

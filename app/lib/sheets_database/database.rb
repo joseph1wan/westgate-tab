@@ -31,7 +31,9 @@ module SheetsDatabase
     end
 
     def update_table_row(table_name, row, values)
-
+      table_row = (row + 1)
+      range = "#{table_name}!#{table_row}:#{table_row}" # "Sheet1!2:2"
+      client.update_spreadsheet_values(spreadsheet_id, range, [values])
     end
   end
 end

@@ -4,11 +4,11 @@ require "rails_helper"
 
 module SheetsDatabase
   RSpec.describe Database do
+    let(:client) { client = double(SheetsDatabase::Client) }
     describe "table_names" do
       it "returns list of tab names" do
-        client = double(SheetsDatabase::Client)
         allow(client).to receive(:spreadsheet) {
-          SHEETS::Spreadsheet.from_json(vcr_json("get_spreadsheet"))
+          vcr_json_to_model(SHEETS::Spreadsheet, "get_spreadsheet")
         }
         database = Database.new(client, "id")
 
@@ -22,9 +22,8 @@ module SheetsDatabase
       end
 
       it "returns a table with data" do
-        client = double(SheetsDatabase::Client)
         allow(client).to receive(:spreadsheet_values) {
-          SHEETS::ValueRange.from_json(vcr_json("table_data"))
+          vcr_json_to_model(SHEETS::ValueRange, "table_data")
         }
         allow(client).to receive(:last_updated).and_return(Time.now)
         database = Database.new(client, "id")
@@ -34,22 +33,20 @@ module SheetsDatabase
     end
 
     describe "update_table_row" do
-      before do
-        Rails.cache.clear
-      end
+      context "vcr_test" do
+        it "updates a table row with new values" do
+          VCR.use_cassette("update_table_row") do
+            table_name = "UpdateTableRow"
+            row = 1
+            values = ["Joseph", "joseph.h.wan@gmail.com", 100]
+            database = Database.new(SheetsDatabase.client, ENV["TEST_SPREADSHEET_ID"])
 
-      it "updates a table row with new values" do
-        client = double(SheetsDatabase::Client)
-        allow(client).to receive(:spreadsheet_values) {
-          SHEETS::ValueRange.from_json(vcr_json("table_data"))
-        }
-        allow(client).to receive(:last_updated).and_return(Time.now)
-        database = Database.new(client, "id")
+            result = database.update_table_row(table_name, row, values)
 
-        row = 4
-        values = ["c", "", "d"]
-
-        expect(database.update_table_row("Sheet1", row, values)).to be_a(Table)
+            expect(result).to be_a(SHEETS::UpdateValuesResponse)
+            expect(result.updated_cells).to be_positive
+          end
+        end
       end
     end
   end

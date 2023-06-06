@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'googleauth'
+require "googleauth"
 
 module SheetsDatabase
   module ApiClients
     class SheetsClient
       include Singleton
-
-      CLIENT_SECRETS = Google::APIClient::ClientSecrets.load
 
       attr_reader :client
 
