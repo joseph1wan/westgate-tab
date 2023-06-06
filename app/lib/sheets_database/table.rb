@@ -29,5 +29,28 @@ module SheetsDatabase
     def cache_last_updated
       Rails.cache.write("#{table_name}-cache-last_updated", Time.now)
     end
+
+    def columns
+      column_map = {}
+      data.values.first.each_with_index { |name, index| column_map[name] = index }
+      column_map
+    end
+
+    def rows
+      data.values[1..]
+    end
+
+    # Find record by ID (id + 1 to account for first row being columns row)
+    def find_by_id(id)
+      rows[id + 1]
+    end
+
+    def find(column_name, term)
+      column_index = columns[column_name]
+      raise Exceptions::InvalidColumnNameError if column_index.nil?
+
+      index = rows.map { |row| row[column_index] }.index(term)
+      rows[index]
+    end
   end
 end

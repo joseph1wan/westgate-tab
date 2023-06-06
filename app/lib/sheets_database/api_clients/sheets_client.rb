@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
+require 'googleauth'
+
 module SheetsDatabase
   module ApiClients
     class SheetsClient
       include Singleton
 
+      CLIENT_SECRETS = Google::APIClient::ClientSecrets.load
+
       attr_reader :client
 
       def initialize
         @client = Google::Apis::SheetsV4::SheetsService.new
-        @client.key = ENV["GOOGLE_API_KEY"]
+        scopes = ["https://www.googleapis.com/auth/spreadsheets"]
+        client.authorization = Google::Auth.get_application_default(scopes)
       end
     end
   end
