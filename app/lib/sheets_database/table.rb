@@ -2,6 +2,8 @@
 
 module SheetsDatabase
   class Table
+    DEFAULT_CELLS = "A:Z".freeze
+
     def self.from_cache(table_name)
       Table.new(table_name: table_name, data: Rails.cache.read("#{table_name}-cache-data"))
     end
@@ -20,6 +22,14 @@ module SheetsDatabase
     def initialize(table_name:, data:)
       @table_name = table_name
       @data = data
+    end
+
+    def range(cells = DEFAULT_CELLS)
+      "#{table_name}!#{cells}"
+    end
+
+    def sync_data(cells = DEFAULT_CELLS)
+      @data = SheetsDatabase.client.spreadsheet_values(SPREADSHEET_ID, range(cells))
     end
 
     def cache_data

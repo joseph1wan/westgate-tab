@@ -11,6 +11,24 @@ module SheetsDatabase
       )
     end
 
+    describe "#sync_data" do
+      it "retrieves data from source and updates" do
+        values = [
+          ["Name", "$1 drinks", "$2 drinks"],
+          ["Joseph", 4, 2],
+          ["Mang", 1, 0],
+          ["Klimeks", 3, 2]
+        ]
+        value_range = SheetsDatabase::SHEETS::ValueRange.new(
+          range: "Sheet1!A1:Z1000",
+          values: values
+        )
+        allow(SheetsDatabase.client).to receive(:spreadsheet_values).and_return(value_range)
+
+        expect { table.sync_data }.to change { table.data }
+      end
+    end
+
     describe "columns" do
       it "returns hash of columns and column index" do
         column_map = table.columns
