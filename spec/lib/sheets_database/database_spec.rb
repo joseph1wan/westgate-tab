@@ -5,7 +5,8 @@ require "rails_helper"
 module SheetsDatabase
   RSpec.describe Database do
     let(:client) { client = double(SheetsDatabase::Client) }
-    describe "table_names" do
+
+    describe "#table_names" do
       it "returns list of tab names" do
         allow(client).to receive(:spreadsheet) {
           vcr_json_to_model(SHEETS::Spreadsheet, "get_spreadsheet")
@@ -16,7 +17,21 @@ module SheetsDatabase
       end
     end
 
-    describe "table" do
+    describe "#name_to_model_map" do
+      before do
+        class TestTable < Table
+          TABLE_NAME = "TestTab"
+        end
+      end
+
+      it "creates a map of table names to models" do
+        database = Database.new(client, "id")
+        expect(database.map). to eq({ TestTable::TABLE_NAME => TestTable })
+      end
+
+    end
+
+    describe "#table" do
       before do
         Rails.cache.clear
       end

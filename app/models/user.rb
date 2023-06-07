@@ -12,8 +12,12 @@ class User
     @specialty_drinks = specialty_drinks
   end
 
+  def self.fields
+    %i[name basic_drinks specialty_drinks]
+  end
+
   def balance
-    basic_drinks + (specialty_drinks * 2)
+    basic_drinks.to_i + (specialty_drinks.to_i * 2)
   end
 
   def update(property, value)

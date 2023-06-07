@@ -14,20 +14,31 @@ module SheetsDatabase
       client.spreadsheet(spreadsheet_id).sheets.map(&:properties).map(&:title)
     end
 
+    def name_to_model_map
+      Table.descendants.each_with_object({}) do |model, result|
+        result[model::TABLE_NAME] = model
+      end
+    end
+
     # Instantiate a Table from cache or from API
     def table(table_name)
+      model = name_to_model_map[table_name]
       range = "#{table_name}!A:Z"
-      last_updated = client.last_updated(spreadsheet_id)
-      if Table.table_cached?(table_name) && last_updated < Table.cache_last_updated(table_name)
-        table = Table.from_cache(table_name)
-      else
-        Rails.logger.info("Updating cache")
-        data = client.spreadsheet_values(range)
-        table = Table.new(table_name: table_name, data: data)
-        table.cache_last_updated
-        table.cache_data
-      end
-      table
+      data = client.spreadsheet_values(spreadsheet_id, range)
+      model.new(data:)
+
+      # Cache snippet
+      # last_updated = client.last_updated(spreadsheet_id)
+      # if model.table_cached?(table_name) && last_updated < model.cache_last_updated(table_name)
+      #   table = model.from_cache(table_name)
+      # else
+      #   Rails.logger.info("Updating cache")
+        # data = client.spreadsheet_values(spreadsheet_id, range)
+        # table = model.new(data:)
+        # table.cache_last_updated
+        # table.cache_data
+      # end
+      # table
     end
 
     def update_table_row(table_name, row, values)

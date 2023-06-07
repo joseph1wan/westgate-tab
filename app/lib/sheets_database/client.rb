@@ -28,7 +28,9 @@ module SheetsDatabase
     end
 
     def spreadsheet_values(spreadsheet_id, range)
-      sheets.get_spreadsheet_values(spreadsheet_id, range)
+      handle_errors do
+        sheets.get_spreadsheet_values(spreadsheet_id, range)
+      end
     end
 
     private

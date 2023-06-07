@@ -2,6 +2,6 @@
 
 module SheetsDatabase
   module Exceptions
-    class ClientError; end
+    class ClientError < StandardError; end
   end
 end
