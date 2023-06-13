@@ -17,11 +17,12 @@ module SheetsDatabase
         Rails.cache.fetch("#{table_name}-cache-data")
     end
 
-    attr_reader :table_name, :data
+    attr_reader :table_name, :data, :client
 
-    def initialize(table_name:, data:)
+    def initialize(table_name:, data:, client:)
       @table_name = table_name
       @data = data
+      @client = client
     end
 
     def range(cells = DEFAULT_CELLS)
@@ -29,7 +30,7 @@ module SheetsDatabase
     end
 
     def sync_data(cells = DEFAULT_CELLS)
-      @data = SheetsDatabase.client.spreadsheet_values(SPREADSHEET_ID, range(cells))
+      @data = client.spreadsheet_values(SPREADSHEET_ID, range(cells))
     end
 
     def cache_data
@@ -52,6 +53,7 @@ module SheetsDatabase
 
     # Find record by ID (id + 1 to account for first row being columns row)
     def row(id)
+      id = id.to_i
       raise Exceptions::InvalidRowError, "Row must be a positive integer" unless id.positive?
 
       rows[id - 1]
@@ -78,6 +80,13 @@ module SheetsDatabase
         value = row[column_index] || ""
         value == term
       end
+    end
+
+    def update_row(row, values)
+      row = row.to_i
+      row += 1
+      range = "#{table_name}!#{row}:#{row}" # "Sheet1!2:2"
+      client.update_spreadsheet_values(SPREADSHEET_ID, range, [values])
     end
   end
 end

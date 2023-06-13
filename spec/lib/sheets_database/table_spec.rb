@@ -7,7 +7,8 @@ module SheetsDatabase
     let(:table) do
       Table.new(
         table_name: "Sheet1",
-        data: vcr_json_to_model(SHEETS::ValueRange, "table_data")
+        data: vcr_json_to_model(SHEETS::ValueRange, "table_data"),
+        client: nil
       )
     end
 
@@ -23,7 +24,9 @@ module SheetsDatabase
           range: "Sheet1!A1:Z1000",
           values: values
         )
-        allow(SheetsDatabase.client).to receive(:spreadsheet_values).and_return(value_range)
+        client = double(SheetsDatabase.client)
+        allow(client).to receive(:spreadsheet_values).and_return(value_range)
+        allow(table).to receive(:client).and_return(client)
 
         expect { table.sync_data }.to change { table.data }
       end

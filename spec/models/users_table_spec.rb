@@ -13,9 +13,9 @@ RSpec.describe UsersTable do
       ]
       value_range = SheetsDatabase::SHEETS::ValueRange.new(
         range: "Sheet1!A1:Z1000",
-        values: values
+        values:
       )
-      users_table = UsersTable.new(data: value_range)
+      users_table = UsersTable.new(data: value_range, client: nil)
       users = users_table.users
 
       expect(users.length).to eq(values[1..].length)

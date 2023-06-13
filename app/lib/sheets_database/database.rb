@@ -23,9 +23,14 @@ module SheetsDatabase
     # Instantiate a Table from cache or from API
     def table(table_name)
       model = name_to_model_map[table_name]
+      if model.nil?
+        error_message = "Table #{table_name} not in map. Mapped tables: #{name_to_model_map.keys}. "
+        raise Exceptions::InvalidTableNameError, error_message
+      end
+
       range = "#{table_name}!A:Z"
       data = client.spreadsheet_values(spreadsheet_id, range)
-      model.new(data:)
+      model.new(table_name:, data:, client:)
 
       # Cache snippet
       # last_updated = client.last_updated(spreadsheet_id)
@@ -39,12 +44,6 @@ module SheetsDatabase
         # table.cache_data
       # end
       # table
-    end
-
-    def update_table_row(table_name, row, values)
-      table_row = (row + 1)
-      range = "#{table_name}!#{table_row}:#{table_row}" # "Sheet1!2:2"
-      client.update_spreadsheet_values(spreadsheet_id, range, [values])
     end
   end
 end
