@@ -73,8 +73,18 @@ VCR.configure do |config|
   }
   config.hook_into :webmock
   config.ignore_localhost = true
-  config.filter_sensitive_data("<API_KEY>") { ENV["GOOGLE_API_KEY"] }
   config.filter_sensitive_data("<TEST_SPREADSHEET_ID>") { ENV["TEST_SPREADSHEET_ID"] }
+  config.before_record do |interaction|
+    interaction.request.body.gsub!(/grant_type.*/, "<ASSERTION>")
+    interaction.response.body = '{\"access_token\" = "<ACCESS_TOKEN>"'
+    if interaction.request.headers.key?("Authorization")
+      interaction.request.headers["Authorization"] = ["<BEARER_TOKEN>"]
+    end
+  end
+
+  config.before_playback do |interaction|
+    # interaction.response.body.gsub!(/grant_type.*/, "<ASSERTION>")
+  end
   config.configure_rspec_metadata!
 
   record_mode = ENV["VCR"] ? ENV["VCR"].to_sym : :once

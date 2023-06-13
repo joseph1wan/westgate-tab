@@ -9,7 +9,8 @@ module SheetsDatabase
 
       def initialize
         @client = Google::Apis::DriveV3::DriveService.new
-        @client.key = ENV["GOOGLE_API_KEY"]
+        scopes = ["https://www.googleapis.com/auth/drive"]
+        client.authorization = Google::Auth.get_application_default(scopes)
       end
     end
   end

@@ -12,7 +12,11 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container mx-auto mt-28 px-5">
+      <div class="flex justify-between">
+        <h1 class="text-4xl mb-4">Westgate Drinks Tab (Proof of Concept)</h1>
+        <%= render partial: "data_configurations/data_switcher" %>
+      </div>
       <%= yield %>
     </main>
   </body>

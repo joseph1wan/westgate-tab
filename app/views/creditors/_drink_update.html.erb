@@ -1,0 +1,11 @@
+<div class="flex items-center justify-center">
+  <%= render partial: "drink_count", locals: { creditor:, drink_type: } %>
+  <div class="flex">
+    <%= button_to creditor_add_drink_path(creditor_id: creditor.id, type: drink_type), method: :put do %>
+      <%= render "icons/plus" %>
+    <% end %>
+    <%= button_to creditor_remove_drink_path(creditor_id: creditor.id, type: drink_type), method: :put do %>
+      <%= render "icons/minus" %>
+    <% end %>
+  </div>
+</div>

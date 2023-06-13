@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-class User
-  extend ActiveModel::Naming
+class Creditor < ApplicationRecord
 
   attr_accessor :id, :name, :basic_drinks, :specialty_drinks, :table
 
