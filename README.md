@@ -8,6 +8,17 @@ Sheets auth = Service account
 2. Generate and download key to `./auth.json`
 3. Set `GOOGLE_APPLICATION_CREDENTIALS`="./auth.json"
 
-# References
+# Development
 
+In separate sessions, run Rails server and asset server:
+```bash
+bin/rails s
+```
+
+```bash
+bin/dev
+```
+
+
+# References
 UI components from [HyperUI](https://www.hyperui.dev)
