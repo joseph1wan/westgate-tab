@@ -3,7 +3,7 @@
 class CreditorsController < ApplicationController
 
   def index
-    @creditors = [] #@table.creditors
+    @creditors = DataConfiguration.instance.creditors
   end
 
   def edit

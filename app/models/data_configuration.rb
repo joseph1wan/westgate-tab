@@ -9,9 +9,13 @@ class DataConfiguration
   attr_accessor :type
   def initialize(type: :active_record)
     @type = type
+  end
+
+  def toggle_data_type
+    @type = other_type
     if type == :google_sheets
       @database = Database.new(SheetsDatabase.client, ENV["SPREADSHEET_ID"])
-      @table = @database.table(Creditor::TABLE_NAME)
+      @table = @database.table(CreditorsTable)
     end
   end
 

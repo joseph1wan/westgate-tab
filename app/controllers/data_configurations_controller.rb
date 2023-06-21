@@ -1,5 +1,5 @@
 class DataConfigurationsController < ApplicationController
   def update
-    DataConfiguration.instance.type = params[:type].to_sym
+    DataConfiguration.instance.toggle_data_type
   end
 end
