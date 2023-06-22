@@ -27,6 +27,15 @@ class DataConfiguration
     (DATA_TYPES - [type]).first
   end
 
+  def new_creditor(params = nil)
+    case @type
+    when :active_record
+      params ? Creditor.new(params) : Creditor.new
+    when :google_sheets
+      # table.creditors
+    end
+  end
+
   def creditors
     case @type
     when :active_record
