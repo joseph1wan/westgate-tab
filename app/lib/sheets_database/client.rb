@@ -10,6 +10,7 @@ module SheetsDatabase
       @sheets = Google::Apis::SheetsV4::SheetsService.new
       scopes = %w[https://www.googleapis.com/auth/spreadsheets] # Drive scope: https://www.googleapis.com/auth/drive
       authorization = Google::Auth.get_application_default(scopes) # Use to initiate other clients as necessary
+      authorization.expires_in = 1
       @sheets.authorization = authorization
     end
 

@@ -1,16 +1,39 @@
-# Google Authorization
+# Overview
 
-Drive auth = API key
-Sheets auth = Service account
+Proof of Concept application to use Google Sheets as a database. This
+application allows users to keep a virtual tab for their drink purchases.
 
-## Service account
-1. Create service account
-2. Generate and download key to `./auth.json`
-3. Set `GOOGLE_APPLICATION_CREDENTIALS`="./auth.json"
+For demonstration purposes, the app starts with using ActiveRecord and sqlite.
+You can use a button on the homepage to toggle between ActiveRecord and GoogleSheets.
+
+## Tech
+
+Stack: Ruby on Rails (sprinkled with Turbo)
+CSS: Tailwind CSS
+External APIs: Google Sheets API
+
+# Set up
+
+## Environment Variables
+
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to Google service account key JSON file.
+- `SPREADSHEET_ID`: The Sheets ID to use for the tab in production.
+- `TEST_SPREADSHEET_ID`: The Sheets ID to use for the tab in tests (for VCR) and development
+
+**Note:** This project uses `dotenv` in testing and development, so `.env` is an option.
+
+## Google Authorization
+
+1. Enable the **Google Sheets API** in your Google Cloud project.
+2. Create a service account for this app.
+3. Generate and download key to `./auth.json`.
+4. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to `"./auth.json"`.
 
 # Development
 
-In separate sessions, run Rails server and asset server:
+In separate sessions, run the Rails server and asset server (for autoloading
+Tailwind CSS changes):
+
 ```bash
 bin/rails s
 ```
@@ -19,6 +42,15 @@ bin/rails s
 bin/dev
 ```
 
+# Testing
+Tests in `client_spec` use VCR to record and playback API calls. Before running
+the test suite for the first time, delete the `spec/cassettes` directory.
+Alternatively, you pass in `VCR=all` to force VCR to re-record interactions.
+
+Run `bin/rspec` to run tests.
+
+Run `VCR=all bin/rspec` to run tests and re-record interactions.
 
 # References
-UI components from [HyperUI](https://www.hyperui.dev)
+Tailwind UI components from [HyperUI](https://www.hyperui.dev)
+Tailwind Icons from [heroicons](https://heroicons.com)

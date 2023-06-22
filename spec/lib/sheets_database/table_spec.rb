@@ -4,67 +4,70 @@ require "rails_helper"
 
 module SheetsDatabase
   RSpec.describe Table do
+    let(:columns) { ["Name", "$1 drinks", "$2 drinks"] }
+    let(:rows) { [["Joseph", 4, 2], ["Mang", 2, 0], ["Klimeks", 3], ["JD", 1, ""]] }
+    let(:table_data) do
+      SheetsDatabase::SHEETS::ValueRange.new(
+        range: "Sheet1!A1:Z1000",
+        values: [columns] + rows
+      )
+    end
     let(:table) do
       Table.new(
         table_name: "Sheet1",
-        data: vcr_json_to_model(SHEETS::ValueRange, "table_data"),
+        data: table_data,
         client: nil
       )
     end
 
     describe "#sync_data" do
       it "retrieves data from source and updates" do
-        values = [
-          ["Name", "$1 drinks", "$2 drinks"],
-          ["Joseph", 4, 2],
-          ["Mang", 1, 0],
-          ["Klimeks", 3, 2]
-        ]
-        value_range = SheetsDatabase::SHEETS::ValueRange.new(
-          range: "Sheet1!A1:Z1000",
-          values: values
-        )
         client = double(SheetsDatabase.client)
-        allow(client).to receive(:spreadsheet_values).and_return(value_range)
+        new_data = SheetsDatabase::SHEETS::ValueRange.new(
+          range: "Sheet1!A1:Z1000",
+          values: [["Name"], ["Joseph"]]
+        )
+        allow(client).to receive(:spreadsheet_values).and_return(new_data)
         allow(table).to receive(:client).and_return(client)
 
         expect { table.sync_data }.to change { table.data }
       end
     end
 
-    describe "columns" do
+    describe "#columns_with_index" do
       it "returns hash of columns and column index" do
-        column_map = table.columns
         expected_columns = {
-          "l" => 0,
-          "Col 2" => 1,
-          "Col3" => 2
+          "Name" => 0,
+          "$1 drinks" => 1,
+          "$2 drinks" => 2,
         }
-
-        expect(column_map).to eq(expected_columns)
+        expect(table.columns_with_index).to eq(expected_columns)
       end
     end
 
     describe "row" do
       it "returns row by id" do
-        expected_row = ["c", "", "d"]
+        row_num = 1
+        expected_row = rows[row_num - 1] # Account for column row
 
-        expect(table.row(3)).to eq(expected_row)
+        expect(table.row(row_num)).to eq(expected_row)
       end
     end
 
     describe "find" do
       context "target exists" do
         it "returns row by column_name and search term" do
-          expected_row = ["c", "", "d"]
+          column = columns[0]
+          search = rows[1][0]
+          expected_row = rows[1]
 
-          expect(table.find("Col3", "d")).to eq(expected_row)
+          expect(table.find(column, search)).to eq(expected_row)
         end
       end
 
       context "target doesn't exist" do
         it "returns row by column_name and search term" do
-          expect(table.find("Col3", "")).to eq(nil)
+          expect(table.find(columns[1], "")).to eq(nil)
         end
       end
     end
@@ -72,23 +75,15 @@ module SheetsDatabase
     describe "where" do
       context "search nil value" do
         it "returns rows with empty cells when term is empty string" do
-          expected = [
-            ["a", "s"],
-            ["b"],
-            ["e"]
-          ]
+          expected_rows = rows[2..]
 
-          expect(table.where("Col3", "")).to eq(expected)
+          expect(table.where(columns[-1], "")).to eq(expected_rows)
         end
 
         it "returns rows with empty cells when term is nil" do
-          expected = [
-            ["a", "s"],
-            ["b"],
-            ["e"]
-          ]
+          expected_rows = rows[2..]
 
-          expect(table.where("Col3", nil)).to eq(expected)
+          expect(table.where(columns[-1], "")).to eq(expected_rows)
         end
       end
     end

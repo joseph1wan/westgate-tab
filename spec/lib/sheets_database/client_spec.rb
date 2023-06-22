@@ -8,7 +8,7 @@ module SheetsDatabase
 
     describe "spreadsheet" do
       it "returns a spreadsheet with values" do
-        VCR.use_cassette("get_spreadsheet") do
+        VCR.use_cassette("spreadsheet") do
           result = client.spreadsheet(ENV["TEST_SPREADSHEET_ID"])
 
           expect(result).to be_a(SHEETS::Spreadsheet)
@@ -20,7 +20,7 @@ module SheetsDatabase
 
     describe "spreadsheet_values" do
       it "get values from a spreadsheet" do
-        VCR.use_cassette("table_data") do
+        VCR.use_cassette("spreadsheet_values") do
           result = client.spreadsheet_values(ENV["TEST_SPREADSHEET_ID"], "WestgateTabTest!A:Z")
 
           expect(result).to be_a(SHEETS::ValueRange)
@@ -32,7 +32,7 @@ module SheetsDatabase
 
     describe "update_spreadsheet_values" do
       it "update a spreadsheet's values" do
-        VCR.use_cassette("update_table_data") do
+        VCR.use_cassette("update_spreadsheet_values") do
           range = "Sheet2!A:Z"
           values = [
             ["l", "Col 2", "Col3"],

@@ -42,9 +42,13 @@ module SheetsDatabase
     end
 
     def columns
-      column_map = {}
-      data.values.first.each_with_index { |name, index| column_map[name] = index }
-      column_map
+      data.values.first
+    end
+
+    def columns_with_index
+      columns.each_with_index.each_with_object({}) do |col_and_ind, result|
+        result[col_and_ind.first] = col_and_ind.last
+      end
     end
 
     def rows
@@ -61,7 +65,7 @@ module SheetsDatabase
 
     # Find first row matching term in given golumn
     def find(column_name, term)
-      column_index = columns[column_name]
+      column_index = columns_with_index[column_name]
       raise Exceptions::InvalidColumnNameError if column_index.nil?
 
       index = rows.map { |row| row[column_index] }.index(term)
@@ -71,7 +75,7 @@ module SheetsDatabase
     # First pass at implementing where. Returns all matching column
     # For now, nil = ""
     def where(column_name, term)
-      column_index = columns[column_name]
+      column_index = columns_with_index[column_name]
       raise Exceptions::InvalidColumnNameError if column_index.nil?
 
       term = "" if term.nil?

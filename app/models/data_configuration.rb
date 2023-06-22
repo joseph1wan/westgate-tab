@@ -14,7 +14,7 @@ class DataConfiguration
   def toggle_data_type
     @type = other_type
     if type == :google_sheets
-      @database = Database.new(SheetsDatabase.client, ENV["SPREADSHEET_ID"])
+      @database = Database.new(SheetsDatabase.client, SheetsDatabase::SPREADSHEET_ID)
     end
   end
 

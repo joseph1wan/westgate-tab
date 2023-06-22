@@ -15,7 +15,7 @@ RSpec.describe CreditorsTable do
         range: "Sheet1!A1:Z1000",
         values:
       )
-      creditors_table = creditorsTable.new(data: value_range, client: nil)
+      creditors_table = CreditorsTable.new(data: value_range, client: nil)
       creditors = creditors_table.creditors
 
       expect(creditors.length).to eq(values[1..].length)

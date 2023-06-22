@@ -2,5 +2,5 @@
 
 require "rails_helper"
 
-RSpec.describe User do
+RSpec.describe Creditor do
 end

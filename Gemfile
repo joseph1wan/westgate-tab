@@ -31,8 +31,6 @@ gem "tailwindcss-rails", "~> 2.0"
 
 gem "google-apis-sheets_v4", "~> 0.23.0"
 
-gem "google-apis-drive_v3", "~> 0.40.0"
-
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 
