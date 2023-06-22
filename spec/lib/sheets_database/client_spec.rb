@@ -4,9 +4,7 @@ require "rails_helper"
 
 module SheetsDatabase
   RSpec.describe Client do
-    let(:sheets_client) { ApiClients::SheetsClient.instance.client }
-    let(:drive_client) { ApiClients::DriveClient.instance.client }
-    let(:client) { Client.new(sheets_client, drive_client) }
+    let(:client) { Client.new }
 
     describe "spreadsheet" do
       it "returns a spreadsheet with values" do

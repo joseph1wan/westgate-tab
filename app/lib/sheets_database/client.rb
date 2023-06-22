@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
+require "googleauth"
+
 module SheetsDatabase
   class Client
-    attr_reader :sheets, :drive
+    attr_reader :sheets
 
-    def initialize(sheets_client, drive_client)
-      @sheets = sheets_client
-      @drive = drive_client
+    def initialize
+      @sheets = Google::Apis::SheetsV4::SheetsService.new
+      scopes = %w[https://www.googleapis.com/auth/spreadsheets] # Drive scope: https://www.googleapis.com/auth/drive
+      authorization = Google::Auth.get_application_default(scopes) # Use to initiate other clients as necessary
+      @sheets.authorization = authorization
     end
 
     def last_updated(spreadsheet_id)

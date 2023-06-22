@@ -6,8 +6,6 @@ module SheetsDatabase
   SPREADSHEET_ID = Rails.env.production? ? ENV["SPREADSHEET_ID"] : ENV["TEST_SPREADSHEET_ID"]
 
   def self.client
-    sheets_client = ApiClients::SheetsClient.instance.client
-    drive_client = ApiClients::DriveClient.instance.client
-    @client ||= Client.new(sheets_client, drive_client)
+    @client ||= Client.new
   end
 end
