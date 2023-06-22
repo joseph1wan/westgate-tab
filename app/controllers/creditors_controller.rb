@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class CreditorsController < ApplicationController
-
   def index
     @creditors = DataConfiguration.instance.creditors
   end
 
   def edit
-    creditor = @table.find_creditor(params[:id])
+    creditor = DataConfiguration.instance.find_creditor(params[:id])
     creditor.pay_balance
     if creditor.save
       redirect_to root_path, notice: "Balance paid"
@@ -17,26 +16,22 @@ class CreditorsController < ApplicationController
   end
 
   def add_drink
-    @creditor = @table.find_creditor(params[:creditor_id])
+    @creditor = DataConfiguration.instance.find_creditor(params[:creditor_id])
     @drink_type = params[:type].to_sym
     @creditor.add_drink(@drink_type)
     if @creditor.save
-      respond_to do |format|
-        format.turbo_stream
-      end
+      respond_to(&:turbo_stream)
     else
       render :index, status: :unprocessable_entity
     end
   end
 
   def remove_drink
-    @creditor = @table.find_creditor(params[:creditor_id])
+    @creditor = DataConfiguration.instance.find_creditor(params[:creditor_id])
     @drink_type = params[:type].to_sym
     @creditor.remove_drink(@drink_type)
     if @creditor.save
-      respond_to do |format|
-        format.turbo_stream
-      end
+      respond_to(&:turbo_stream)
     else
       render :index, status: :unprocessable_entity
     end
@@ -55,7 +50,7 @@ class CreditorsController < ApplicationController
       #   range: "Sheet1!A1:Z1000",
       #   values: values
       # )
-      # @table = creditorsTable.new(data: value_range, client: nil)
-      @table ||= @database.table(Creditor::TABLE_NAME)
+      # DataConfiguration.instance = creditorsTable.new(data: value_range, client: nil)
+      DataConfiguration.instance ||= @database.table(Creditor::TABLE_NAME)
     end
 end

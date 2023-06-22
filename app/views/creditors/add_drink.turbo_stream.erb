@@ -1,1 +1,2 @@
-<%= turbo_stream.update @creditor.dom_id(@drink_type), partial: "creditors/drink_count", locals: { creditor: @creditor, drink_type: @drink_type } %>
+<%= turbo_stream.update @creditor.dom_id(@drink_type), partial: "drink_count", locals: { creditor: @creditor, drink_type: @drink_type } %>
+<%= turbo_stream.update @creditor.dom_id(:balance), partial: "balance", locals: { creditor: @creditor } %>

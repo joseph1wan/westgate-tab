@@ -15,9 +15,13 @@ class DataConfiguration
     @type = other_type
     if type == :google_sheets
       @database = Database.new(SheetsDatabase.client, ENV["SPREADSHEET_ID"])
-      @table = @database.table(CreditorsTable)
     end
   end
+
+  def table
+    @database.table(CreditorsTable)
+  end
+
 
   def other_type
     (DATA_TYPES - [type]).first
@@ -28,7 +32,7 @@ class DataConfiguration
     when :active_record
       Creditor.all
     when :google_sheets
-      @table.creditors
+      table.creditors
     end
   end
 
@@ -37,7 +41,7 @@ class DataConfiguration
     when :active_record
       Creditor.find_by_id(id)
     when :google_sheets
-      @table.find_creditor(id)
+      table.find_creditor(id)
     end
   end
 end
