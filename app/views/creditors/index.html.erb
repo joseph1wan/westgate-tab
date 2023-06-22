@@ -1,4 +1,10 @@
 <div class="overflow-x-auto">
+  <div class="flex justify-between my-4">
+    <div class="relative w-1/6">
+      <%= render partial: "form", locals: { creditor: @creditor } %>
+    </div>
+    <%= render partial: "data_configurations/data_switcher" %>
+  </div>
   <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
     <thead class="ltr:text-left">
       <tr>

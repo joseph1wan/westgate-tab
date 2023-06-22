@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "creditors#index"
 
-  resources :creditors, only: :index do
+  resources :creditors, only: %i[index create] do
     get :pay, action: :edit
     put "add_drink/:type", action: :add_drink, as: :add_drink
     put "remove_drink/:type", action: :remove_drink, as: :remove_drink

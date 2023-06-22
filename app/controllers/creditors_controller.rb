@@ -3,10 +3,17 @@
 class CreditorsController < ApplicationController
   def index
     @creditors = DataConfiguration.instance.creditors
+    @creditor = DataConfiguration.instance.new_creditor
+  end
+
+  def create
+    @creditor = DataConfiguration.instance.new_creditor(creditor_params)
+    @creditor.save if @creditor.valid?
+    redirect_to root_path
   end
 
   def edit
-    creditor = DataConfiguration.instance.find_creditor(params[:id])
+    creditor = DataConfiguration.instance.find_creditor(params[:creditor_id])
     creditor.pay_balance
     if creditor.save
       redirect_to root_path, notice: "Balance paid"
@@ -52,5 +59,9 @@ class CreditorsController < ApplicationController
       # )
       # DataConfiguration.instance = creditorsTable.new(data: value_range, client: nil)
       DataConfiguration.instance ||= @database.table(Creditor::TABLE_NAME)
+    end
+
+    def creditor_params
+      params.require(:creditor).permit(:name)
     end
 end
