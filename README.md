@@ -6,6 +6,13 @@ application allows users to keep a virtual tab for their drink purchases.
 For demonstration purposes, the app starts with using ActiveRecord and sqlite.
 You can use a button on the homepage to toggle between ActiveRecord and GoogleSheets.
 
+### ActiveRecord view
+<img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/030b5f0b-5fb1-49eb-9420-f9cba76ade1c">
+
+### Google Sheets view
+<img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/0a951baa-7701-4392-be59-20d69ba071e3">
+
+
 ## Tech
 
 Stack: Ruby on Rails (sprinkled with Turbo)
