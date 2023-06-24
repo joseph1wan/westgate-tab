@@ -13,12 +13,6 @@ module SheetsDatabase
       client.spreadsheet(spreadsheet_id).sheets.map(&:properties).map(&:title)
     end
 
-    def name_to_model_map
-      Table.descendants.each_with_object({}) do |model, result|
-        result[model::TABLE_NAME] = model
-      end
-    end
-
     # Instantiate a Table from API
     def table(model)
       table_name = model::TABLE_NAME
