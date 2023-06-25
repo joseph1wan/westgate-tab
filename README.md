@@ -37,6 +37,13 @@ You can use a button on the homepage to toggle between ActiveRecord and GoogleSh
 
 # Development
 
+This app uses a standard SQLite database. To initialize:
+
+```
+bundle exec rails db:create
+bundle exec rails db:schema:load
+```
+
 In separate sessions, run the Rails server and asset server (for autoloading
 Tailwind CSS changes):
 
@@ -47,6 +54,32 @@ bin/rails s
 ```bash
 bin/dev
 ```
+
+# "Deployment"
+
+## Docker
+
+1. Build Docker image with required env variables:
+
+    ```
+    docker build --build-arg --build-arg SPREADSHEET_ID="<SPREADSHEET_ID>" -t westgate-tab
+    ```
+
+    **Note:** You can optionally change the path for the Google credentials.
+
+2. Copy the Google credentials JSON file to the expected location:
+    ```
+    docker cp ./auth.json westgate:/app/
+    ```
+
+3. Run the Docker image on `localhost:3000`:
+
+    ```
+    docker run -it -p 80:3000 --name westgate --rm westgate-tab
+    ```
+
+4. Access the app at `http://localhost`
+
 
 # Testing
 Tests in `client_spec` use VCR to record and playback API calls. Before running

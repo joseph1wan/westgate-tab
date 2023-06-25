@@ -59,7 +59,7 @@ group :development, :test do
   gem "pry-rails", "~> 0.3.9"
   gem "rspec-rails"
   gem 'webmock', '~> 3.7', '>= 3.7.6'
-  gem 'vcr', github: "vcr/vcr"
+  gem 'vcr', '~> 6.0'
 end
 
 group :development do
