@@ -22,7 +22,7 @@ module SheetsDatabase
 
     describe "#sync_data" do
       it "retrieves data from source and updates" do
-        client = double(SheetsDatabase.client)
+        client = double(Client)
         new_data = SheetsDatabase::SHEETS::ValueRange.new(
           range: "Sheet1!A1:Z1000",
           values: [["Name"], ["Joseph"]]

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module SheetsDatabase
-  RSpec.describe Client do
+  RSpec.describe Client, vcr: true do
     let(:client) { Client.new }
 
     describe "spreadsheet" do
