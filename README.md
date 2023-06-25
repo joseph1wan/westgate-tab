@@ -12,12 +12,11 @@ You can use a button on the homepage to toggle between ActiveRecord and GoogleSh
 ### Google Sheets view
 <img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/0a951baa-7701-4392-be59-20d69ba071e3">
 
-
 ## Tech
 
-Stack: Ruby on Rails (sprinkled with Turbo)
-CSS: Tailwind CSS
-External APIs: Google Sheets API
+- Stack: Ruby on Rails (sprinkled with Turbo)
+- CSS: Tailwind CSS
+- External APIs: Google Sheets API
 
 # Set up
 
