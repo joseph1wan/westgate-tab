@@ -7,10 +7,10 @@ For demonstration purposes, the app starts with using ActiveRecord and sqlite.
 You can use a button on the homepage to toggle between ActiveRecord and GoogleSheets.
 
 ### ActiveRecord view
-<img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/030b5f0b-5fb1-49eb-9420-f9cba76ade1c">
+<img width="1679" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/38f24d8e-0123-43b6-a6cc-4cf40c7b683e">
 
 ### Google Sheets view
-<img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/0a951baa-7701-4392-be59-20d69ba071e3">
+<img width="1680" alt="image" src="https://github.com/joseph1wan/westgate-tab/assets/25408114/52668afd-4e21-4d01-a838-764c45ddbc1f">
 
 ## Tech
 
