@@ -1,26 +1,77 @@
-FROM ruby:3.2.2
+# syntax = docker/dockerfile:1
 
-ENV SECRET_KEY_BASE=$(uuidgen)
-ENV RAILS_ENV=production
-
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+ARG RUBY_VERSION=3.2.2
 ARG GOOGLE_CREDS=auth.json
 ARG SPREADSHEET_ID
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDS
-ENV SPREADSHEET_ID=$SPREADSHEET_ID
+FROM ruby:$RUBY_VERSION-slim as base
 
-WORKDIR /app
+# Rails app lives here
+WORKDIR /rails
 
-COPY Gemfile* .
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_WITHOUT="development:test" \
+    BUNDLE_DEPLOYMENT="1"
 
-RUN gem install bundler -v 2.4.13
-RUN bundle install
+# Update gems and bundler
+RUN gem update --system --no-document && \
+    gem install -N bundler
 
-COPY . .
 
-RUN bundle exec rails db:create; bundle exec rails db:schema:load
-RUN bundle exec rails assets:precompile; bundle exec rails tailwindcss:build
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential pkg-config
+
+# Install application gems
+COPY --link Gemfile Gemfile.lock ./
+RUN bundle install && \
+    bundle exec bootsnap precompile --gemfile && \
+    rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git
+
+# Copy application code
+COPY --link . .
+
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
+
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE=DUMMY ./bin/rails assets:precompile; SECRET_KEY_BASE=DUMMY ./bin/rails tailwindcss:build
+
+
+# Final stage for app image
+FROM base
+
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Copy built artifacts: gems, application
+COPY --from=build /usr/local/bundle /usr/local/bundle
+COPY --from=build /rails /rails
+
+# Run and own only the runtime files as a non-root user for security
+RUN useradd rails --create-home --shell /bin/bash && \
+    mkdir /data && \
+    chown -R rails:rails db log storage tmp /data
+USER rails:rails
+
+# Deployment options
+ENV DATABASE_URL="sqlite3:///data/production.sqlite3" \
+    RAILS_LOG_TO_STDOUT="1" \
+    RAILS_SERVE_STATIC_FILES="true" \
+    GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDS \
+    SPREADSHEET_ID=$SPREADSHEET_ID
+
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+# Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD bundle exec rails s
-
+VOLUME /data
+CMD ["./bin/rails", "server"]
