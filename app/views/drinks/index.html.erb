@@ -1,0 +1,19 @@
+<div class="overflow-x-auto">
+  <div class="mt-4 mb-10">
+    <div class="text-xl mb-4">Basic Drinks ($1)</div>
+    <div class="grid grid-cols-6">
+      <% @basic_drinks.each do |drink| %>
+        <%= render partial: "drink", locals: { name: drink[:name], img_url: drink[:img_url] } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="my-10">
+    <div class="text-xl mb-4">Specialty Drinks ($2)</div>
+    <div class="grid grid-cols-6">
+      <% @specialty_drinks.each do |drink| %>
+        <%= render partial: "drink", locals: { name: drink[:name], img_url: drink[:img_url] } %>
+      <% end %>
+    </div>
+  </div>
+</div>

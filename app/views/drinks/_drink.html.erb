@@ -1,0 +1,15 @@
+<div class="col-span-1 mr-4">
+  <a href=<%= add_drink_path(name: name, img_url: img_url) %> class="block group">
+    <img
+        src=<%= img_url %>
+        alt=""
+        class="object-cover w-full rounded aspect-square"
+        />
+
+    <div class="mt-5">
+      <h3 class="text-gray-900 group-hover:underline group-hover:underline-offset-4 text-center">
+          <%= name %>
+      </h3>
+    </div>
+  </a>
+</div>

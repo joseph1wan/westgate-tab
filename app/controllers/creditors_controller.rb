@@ -45,6 +45,7 @@ class CreditorsController < ApplicationController
   end
 
   private
+
     def load_data
       @data_config ||= DataConfiguration.new
       # values = [

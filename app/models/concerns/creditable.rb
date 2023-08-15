@@ -3,6 +3,10 @@
 module Creditable
   extend ActiveSupport::Concern
 
+  def initials
+    name.split(" ").map(&:first).join
+  end
+
   def drink_count(type)
     case type
     when :basic

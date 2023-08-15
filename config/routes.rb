@@ -10,5 +10,8 @@ Rails.application.routes.draw do
     put "remove_drink/:type", action: :remove_drink, as: :remove_drink
   end
 
+  resources :drinks, only: %i[index]
+  get "drinks/add_to_tab", controller: :drinks, action: :add_drink, as: :add_drink
+
   put "data_configuration", action: :update, controller: :data_configurations
 end
